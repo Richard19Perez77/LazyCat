@@ -4,6 +4,6 @@ import com.rperez.lazycat.data.NekoImageResponse
 import retrofit2.http.GET
 
 interface NekosApiService {
-    @GET("images/random")
-    suspend fun getRandomImage(): NekoImageResponse
+    @GET("neko?amount=20")
+    suspend fun getRandomImages(): NekoImageResponse
 }

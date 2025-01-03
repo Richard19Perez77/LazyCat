@@ -1,36 +1,31 @@
 package com.rperez.lazycat.viewmodel
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rperez.lazycat.data.NekoImageResponse
+import com.rperez.lazycat.data.Results
 import com.rperez.lazycat.service.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class NekoViewModel() : ViewModel() {
 
     var calling = false
-    var response = NekoImageResponse(emptyList(), 0)
 
-    fun refreshImage(): String {
-        if (response.items.isNotEmpty()) {
-            var list = response.items.toMutableList()
-            var item = list.removeAt(0)
-            response.items = list
-            return item.image_url
-        } else {
-            fetchImages()
-        }
-        return ""
-    }
+    private var _results = mutableStateOf(listOf<Results>())
+    val results
+        get() = _results
 
-    private fun fetchImages() {
+    fun refreshUrlList() {
         viewModelScope.launch {
             try {
                 if (!calling) {
                     calling = true
-                    response = RetrofitInstance.api.getRandomImage()
+                    _results.value = RetrofitInstance.api.getRandomImages().results
+                    Log.d("_response.value", "_response.value")
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.d("Exception", e.message.toString())
             } finally {
                 calling = false
             }

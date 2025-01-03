@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.rperez.lazycat"
         minSdk = 27
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -43,13 +43,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.ui)
     implementation(libs.androidx.material)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v261)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.coil.compose)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
