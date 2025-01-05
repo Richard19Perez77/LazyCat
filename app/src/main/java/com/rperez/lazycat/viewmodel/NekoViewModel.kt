@@ -31,4 +31,9 @@ class NekoViewModel() : ViewModel() {
             }
         }
     }
+
+    fun newResults() {
+        _results.value = mutableListOf<Results>()
+        refreshUrlList()
+    }
 }

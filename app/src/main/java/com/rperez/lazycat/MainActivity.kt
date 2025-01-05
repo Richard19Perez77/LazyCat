@@ -3,23 +3,31 @@ package com.rperez.lazycat
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import com.rperez.lazycat.data.Results
 import com.rperez.lazycat.ui.theme.LazyCatTheme
 import com.rperez.lazycat.viewmodel.NekoViewModel
@@ -30,12 +38,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LazyCatTheme {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val vm: NekoViewModel = NekoViewModel()
-                    ScrollingGrid(vm.results, vm::refreshUrlList)
+                val vm: NekoViewModel = NekoViewModel()
+                Scaffold(
+                    floatingActionButton = {
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                vm.newResults()
+                            }
+                        ) {}
+                    }
+                ) { innerPadding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ScrollingGrid(vm.results, vm::refreshUrlList)
+                    }
                 }
             }
         }
@@ -44,18 +64,31 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun IndividualImage(url: String) {
-    val painter = rememberAsyncImagePainter(model = url)
+    var isLoading by remember { mutableStateOf(true) }
+
     Box(
         modifier = Modifier
             .size(600.dp)
             .border(1.dp, Color.Red),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painter,
-            contentDescription = "Random Neko Image",
-            contentScale = ContentScale.Fit,
+        AsyncImage(
+            model = url,
+            contentDescription = "anime image",
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = painterResource(id = R.drawable.placeholder),
+            error = painterResource(id = R.drawable.error),
+            onLoading = {
+                isLoading = true
+            },
+            onSuccess = {
+                isLoading = false
+            }
         )
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
     }
 }
 
