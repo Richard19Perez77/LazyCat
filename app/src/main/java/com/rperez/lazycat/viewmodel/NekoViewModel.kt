@@ -22,18 +22,11 @@ class NekoViewModel() : ViewModel() {
                 if (!calling) {
                     calling = true
                     _results.value = RetrofitInstance.api.getRandomImages().results
-                    Log.d("_response.value", "_response.value")
                 }
-            } catch (e: Exception) {
-                Log.d("Exception", e.message.toString())
+            } catch (_: Exception) {
             } finally {
                 calling = false
             }
         }
-    }
-
-    fun newResults() {
-        _results.value = mutableListOf<Results>()
-        refreshUrlList()
     }
 }

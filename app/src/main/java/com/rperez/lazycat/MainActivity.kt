@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
 import com.rperez.lazycat.data.Results
 import com.rperez.lazycat.ui.theme.LazyCatTheme
 import com.rperez.lazycat.viewmodel.NekoViewModel
@@ -43,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
                             onClick = {
-                                vm.newResults()
+                                vm.refreshUrlList()
                             }
                         ) {}
                     }
@@ -64,6 +63,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun IndividualImage(url: String) {
+
     var isLoading by remember { mutableStateOf(true) }
 
     Box(
