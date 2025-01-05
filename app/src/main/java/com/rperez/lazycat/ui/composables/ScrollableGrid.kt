@@ -5,17 +5,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import com.rperez.lazycat.data.Results
 
 @Composable
-fun ScrollingGrid(results: MutableState<List<Results>>, getImages: () -> Unit) {
-
-    LaunchedEffect(Unit) {
-        getImages()
-    }
+fun ScrollingGrid(results: State<List<Results>>) {
 
     if (results.value.isNotEmpty()) {
         LazyVerticalGrid(

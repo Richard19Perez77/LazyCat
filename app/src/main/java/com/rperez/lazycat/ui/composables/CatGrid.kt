@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.rperez.lazycat.viewmodel.NekoViewModel
@@ -13,6 +14,7 @@ import com.rperez.lazycat.viewmodel.NekoViewModel
 @Composable
 fun CatGrid() {
     val vm: NekoViewModel = NekoViewModel()
+    vm.refreshUrlList()
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -28,7 +30,9 @@ fun CatGrid() {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            ScrollingGrid(vm.results, vm::refreshUrlList)
+            ScrollingGrid(
+                vm.results.collectAsState()
+            )
         }
     }
 }

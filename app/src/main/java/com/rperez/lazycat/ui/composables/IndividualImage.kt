@@ -3,6 +3,7 @@ package com.rperez.lazycat.ui.composables
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -20,19 +21,20 @@ import com.rperez.lazycat.R
 
 @Composable
 fun IndividualImage(url: String) {
-
     var isLoading by remember { mutableStateOf(true) }
 
     Box(
         modifier = Modifier
+            .padding(4.dp)
             .size(600.dp)
-            .border(1.dp, Color.Red),
+            .border(2.dp, Color(0xFFE12885)),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
             model = url,
             contentDescription = "anime image",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             placeholder = painterResource(id = R.drawable.placeholder),
             error = painterResource(id = R.drawable.error),
             onLoading = {

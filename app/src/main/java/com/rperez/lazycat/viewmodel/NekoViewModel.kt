@@ -1,20 +1,20 @@
 package com.rperez.lazycat.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rperez.lazycat.data.Results
 import com.rperez.lazycat.service.RetrofitInstance
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NekoViewModel() : ViewModel() {
 
-    var calling = false
+    private var _results = MutableStateFlow<List<Results>>(emptyList())
+    val results: StateFlow<List<Results>> = _results.asStateFlow()
 
-    private var _results = mutableStateOf(listOf<Results>())
-    val results
-        get() = _results
+    private var calling = false
 
     fun refreshUrlList() {
         viewModelScope.launch {
