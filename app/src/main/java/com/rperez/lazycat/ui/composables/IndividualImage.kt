@@ -44,7 +44,7 @@ fun IndividualImage(url: String) {
             contentDescription = "anime image",
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f),
+                .aspectRatio(2f / 3f),
             placeholder = painterResource(id = R.drawable.placeholder),
             error = painterResource(id = R.drawable.error),
             onLoading = {
