@@ -10,14 +10,14 @@ import okhttp3.Request
 
 class SaveImage {
     companion object {
-        suspend fun saveImageToGallery(context: Context, url: String): Boolean {
+        suspend fun saveImageToGallery(context: Context, url: String): String {
             return withContext(Dispatchers.IO) {
                 try {
                     val client = OkHttpClient()
                     val request = Request.Builder().url(url).build()
                     val response = client.newCall(request).execute()
 
-                    val inputStream = response.body?.byteStream() ?: return@withContext false
+                    val inputStream = response.body?.byteStream() ?: return@withContext ""
                     val fileName = "lazycat_${url.hashCode()}.jpg" // hash-based name to prevent duplicates
 
                     val resolver = context.contentResolver
@@ -32,7 +32,7 @@ class SaveImage {
                         null
                     )
                     existing?.use {
-                        if (it.moveToFirst()) return@withContext true // File already exists
+                        if (it.moveToFirst()) return@withContext "" // File already exists
                     }
 
                     val values = ContentValues().apply {
@@ -43,7 +43,7 @@ class SaveImage {
                     }
 
                     val uri = resolver.insert(collection, values)
-                        ?: return@withContext false
+                        ?: return@withContext ""
 
                     resolver.openOutputStream(uri)?.use { output ->
                         inputStream.copyTo(output)
@@ -53,9 +53,9 @@ class SaveImage {
                     values.put(MediaStore.Images.Media.IS_PENDING, 0)
                     resolver.update(uri, values, null, null)
 
-                    true
+                    uri.toString()
                 } catch (e: Exception) {
-                    false
+                    ""
                 }
             }
         }

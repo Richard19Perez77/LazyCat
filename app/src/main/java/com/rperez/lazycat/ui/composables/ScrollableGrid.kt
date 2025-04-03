@@ -19,7 +19,12 @@ fun ScrollingGrid(results: State<List<Results>>) {
             modifier = Modifier.fillMaxSize()
         ) {
             items(results.value) { result ->
-                IndividualImage(result.url)
+                result.local_uri?.let {
+                    IndividualImage(it)
+                } ?: run {
+
+                    IndividualImage(result.url)
+                }
             }
         }
     } else {

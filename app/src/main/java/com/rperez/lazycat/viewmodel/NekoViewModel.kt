@@ -26,7 +26,7 @@ class NekoViewModel : ViewModel() {
                     _results.value = RetrofitInstance.api.getRandomImages().results
                     if (_results.value.isNotEmpty()) {
                         _results.value.forEach {
-                            SaveImage.saveImageToGallery(context, it.url)
+                            it.local_uri = SaveImage.saveImageToGallery(context, it.url)
                         }
                     }
                 }
