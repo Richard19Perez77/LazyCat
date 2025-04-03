@@ -25,13 +25,8 @@ import com.rperez.lazycat.utils.SaveImage
 @Composable
 fun IndividualImage(url: String) {
 
-    val context = LocalContext.current
     var isLoading by remember { mutableStateOf(true) }
 
-
-    LaunchedEffect(url) {
-        SaveImage.saveImageToGallery(context, url)
-    }
 
     Box(
         modifier = Modifier

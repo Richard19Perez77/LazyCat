@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.rperez.lazycat.R
@@ -19,18 +20,23 @@ import com.rperez.lazycat.viewmodel.NekoViewModel
 
 @Composable
 fun CatGrid() {
+    val context = LocalContext.current
     val vm = NekoViewModel()
-    vm.refreshUrlList()
+
+    vm.refreshUrlList(context)
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    vm.refreshUrlList()
+                    vm.refreshUrlList(context)
                 },
                 containerColor = Color(0xFF137A7F),
             ) {
                 Image(
-                    modifier = Modifier.size(48.dp).padding(0.dp),
+                    modifier = Modifier
+                        .size(48.dp)
+                        .padding(0.dp),
                     painter = painterResource(id = R.drawable.miku2),
                     contentDescription = "fab button icon"
                 )
