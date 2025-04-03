@@ -20,16 +20,17 @@ import com.rperez.lazycat.viewmodel.NekoViewModel
 
 @Composable
 fun CatGrid() {
-    val context = LocalContext.current
-    val vm = NekoViewModel()
 
-    vm.refreshUrlList(context)
+    val context = LocalContext.current
+    val nekoViewModel = NekoViewModel()
+
+    nekoViewModel.refreshUrlList(context)
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    vm.refreshUrlList(context)
+                    nekoViewModel.refreshUrlList(context)
                 },
                 containerColor = Color(0xFF137A7F),
             ) {
@@ -50,7 +51,7 @@ fun CatGrid() {
             contentAlignment = Alignment.Center
         ) {
             ScrollingGrid(
-                vm.results.collectAsState()
+                nekoViewModel.results.collectAsState()
             )
         }
     }

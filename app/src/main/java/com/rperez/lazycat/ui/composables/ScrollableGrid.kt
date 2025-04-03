@@ -12,7 +12,6 @@ import com.rperez.lazycat.data.Results
 
 @Composable
 fun ScrollingGrid(results: State<List<Results>>) {
-
     if (results.value.isNotEmpty()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),

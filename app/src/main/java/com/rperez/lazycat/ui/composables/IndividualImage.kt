@@ -25,7 +25,6 @@ fun IndividualImage(url: String) {
 
     var isLoading by remember { mutableStateOf(true) }
 
-
     Box(
         modifier = Modifier
             .padding(4.dp)

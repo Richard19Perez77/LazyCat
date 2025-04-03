@@ -9,7 +9,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class SaveImage {
+
     companion object {
+
         suspend fun saveImageToGallery(context: Context, url: String) {
             return withContext(Dispatchers.IO) {
                 try {
@@ -52,7 +54,7 @@ class SaveImage {
                     values.clear()
                     values.put(MediaStore.Images.Media.IS_PENDING, 0)
                     resolver.update(uri, values, null, null)
-                } catch (e: Exception) { }
+                } catch (_: Exception) { }
             }
         }
     }
