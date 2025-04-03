@@ -1,5 +1,6 @@
 package com.rperez.lazycat.ui.composables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.rperez.lazycat.R
 
 @Composable
@@ -31,14 +32,24 @@ fun IndividualImage(url: String) {
             .border(2.dp, Color(0xFFE12885)),
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = url,
             contentDescription = "anime image",
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2f / 3f),
-            placeholder = painterResource(id = R.drawable.placeholder),
-            error = painterResource(id = R.drawable.error),
+            loading = {
+                Image(
+                    painter = painterResource(id = R.drawable.placeholder),
+                    contentDescription = "placeholder"
+                )
+            },
+            error = {
+                Image(
+                    painter = painterResource(id = R.drawable.error),
+                    contentDescription = "error"
+                )
+            },
             onLoading = {
                 isLoading = true
             },

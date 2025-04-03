@@ -18,13 +18,11 @@ fun ScrollingGrid(results: State<List<Results>>) {
             columns = GridCells.Fixed(1),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(results.value) { result ->
-                result.local_uri?.let {
-                    IndividualImage(it)
-                } ?: run {
-
-                    IndividualImage(result.url)
-                }
+            items(
+                results.value,
+                key = { result -> result.url }
+            ) { result ->
+                IndividualImage(result.url)
             }
         }
     } else {

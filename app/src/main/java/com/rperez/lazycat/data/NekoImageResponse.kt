@@ -7,5 +7,4 @@ data class NekoImageResponse(
 data class Results(
     var anime_name: String,
     var url: String,
-    var local_uri: String?
 )
