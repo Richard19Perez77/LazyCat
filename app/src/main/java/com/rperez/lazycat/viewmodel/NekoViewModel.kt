@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class NekoViewModel() : ViewModel() {
+class NekoViewModel : ViewModel() {
 
     private var _results = MutableStateFlow<List<Results>>(emptyList())
     val results: StateFlow<List<Results>> = _results.asStateFlow()
