@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 data class NekoUiState(
     val results: List<Results> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val hasError: Boolean = false,
 )
 

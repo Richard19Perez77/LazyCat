@@ -1,5 +1,10 @@
 package com.rperez.lazycat.ui.composables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,11 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rperez.lazycat.R
 import com.rperez.lazycat.viewmodel.NekoViewModel
 
-private val FabActive = Color(0xFFE12885)
-private val FabDisabled = Color(0xFF137A7F)
-private val GrayscaleFilter = ColorFilter.colorMatrix(
-    ColorMatrix().apply { setToSaturation(0f) }
-)
+private val FabGreen = Color(0xFF137A7F)
 
 @Composable
 fun CatGrid(nekoViewModel: NekoViewModel = viewModel()) {
@@ -41,20 +40,23 @@ fun CatGrid(nekoViewModel: NekoViewModel = viewModel()) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    if (!uiState.isLoading) {
-                        nekoViewModel.refreshUrlList(context.applicationContext)
-                    }
-                },
-                containerColor = if (uiState.isLoading) FabDisabled else FabActive,
+            AnimatedVisibility(
+                visible = !uiState.isLoading,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut(),
             ) {
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(id = R.drawable.miku2),
-                    contentDescription = stringResource(R.string.fab_refresh),
-                    colorFilter = if (uiState.isLoading) GrayscaleFilter else null,
-                )
+                FloatingActionButton(
+                    onClick = {
+                        nekoViewModel.refreshUrlList(context.applicationContext)
+                    },
+                    containerColor = FabGreen,
+                ) {
+                    Image(
+                        modifier = Modifier.size(48.dp),
+                        painter = painterResource(id = R.drawable.miku2),
+                        contentDescription = stringResource(R.string.fab_refresh),
+                    )
+                }
             }
         }
     ) { innerPadding ->
