@@ -12,49 +12,56 @@ class SaveImage {
 
     companion object {
 
+        private val client = OkHttpClient()
+
         suspend fun saveImageToGallery(context: Context, url: String) {
-            return withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
-                    val client = OkHttpClient()
                     val request = Request.Builder().url(url).build()
-                    val response = client.newCall(request).execute()
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) return@withContext
+                        val inputStream = response.body?.byteStream() ?: return@withContext
+                        val fileName = "lazycat_${url.hashCode()}.jpg"
 
-                    val inputStream = response.body?.byteStream() ?: return@withContext
-                    val fileName = "lazycat_${url.hashCode()}.jpg" // hash-based name to prevent duplicates
+                        val resolver = context.contentResolver
+                        val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-                    val resolver = context.contentResolver
-                    val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        val existing = resolver.query(
+                            collection,
+                            arrayOf(MediaStore.Images.Media.DISPLAY_NAME),
+                            "${MediaStore.Images.Media.DISPLAY_NAME}=?",
+                            arrayOf(fileName),
+                            null
+                        )
+                        existing?.use {
+                            if (it.moveToFirst()) return@withContext
+                        }
 
-                    // Check if the file already exists
-                    val existing = resolver.query(
-                        collection,
-                        arrayOf(MediaStore.Images.Media.DISPLAY_NAME),
-                        "${MediaStore.Images.Media.DISPLAY_NAME}=?",
-                        arrayOf(fileName),
-                        null
-                    )
-                    existing?.use {
-                        if (it.moveToFirst()) return@withContext // File already exists
+                        val values = ContentValues().apply {
+                            put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+                            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/LazyCat")
+                            put(MediaStore.Images.Media.IS_PENDING, 1)
+                        }
+
+                        val uri = resolver.insert(collection, values) ?: return@withContext
+                        try {
+                            val output = resolver.openOutputStream(uri)
+                            if (output == null) {
+                                resolver.delete(uri, null, null)
+                                return@withContext
+                            }
+                            output.use { inputStream.copyTo(it) }
+
+                            values.clear()
+                            values.put(MediaStore.Images.Media.IS_PENDING, 0)
+                            resolver.update(uri, values, null, null)
+                        } catch (_: Exception) {
+                            resolver.delete(uri, null, null)
+                        }
                     }
-
-                    val values = ContentValues().apply {
-                        put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-                        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                        put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/LazyCat")
-                        put(MediaStore.Images.Media.IS_PENDING, 1)
-                    }
-
-                    val uri = resolver.insert(collection, values)
-                        ?: return@withContext
-
-                    resolver.openOutputStream(uri)?.use { output ->
-                        inputStream.copyTo(output)
-                    }
-
-                    values.clear()
-                    values.put(MediaStore.Images.Media.IS_PENDING, 0)
-                    resolver.update(uri, values, null, null)
-                } catch (_: Exception) { }
+                } catch (_: Exception) {
+                }
             }
         }
     }

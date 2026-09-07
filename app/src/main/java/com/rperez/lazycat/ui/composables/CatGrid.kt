@@ -8,38 +8,41 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rperez.lazycat.R
 import com.rperez.lazycat.viewmodel.NekoViewModel
 
 @Composable
-fun CatGrid() {
-
+fun CatGrid(nekoViewModel: NekoViewModel = viewModel()) {
     val context = LocalContext.current
-    val nekoViewModel = NekoViewModel()
+    val uiState by nekoViewModel.uiState.collectAsState()
 
-    nekoViewModel.refreshUrlList(context)
+    LaunchedEffect(Unit) {
+        nekoViewModel.refreshUrlList(context.applicationContext)
+    }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    nekoViewModel.refreshUrlList(context)
+                    nekoViewModel.refreshUrlList(context.applicationContext)
                 },
                 containerColor = Color(0xFF137A7F),
             ) {
                 Image(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .padding(0.dp),
+                    modifier = Modifier.size(48.dp),
                     painter = painterResource(id = R.drawable.miku2),
-                    contentDescription = "fab button icon"
+                    contentDescription = stringResource(R.string.fab_refresh),
                 )
             }
         }
@@ -51,7 +54,8 @@ fun CatGrid() {
             contentAlignment = Alignment.Center
         ) {
             ScrollingGrid(
-                nekoViewModel.results.collectAsState()
+                uiState = uiState,
+                onRetry = { nekoViewModel.refreshUrlList(context.applicationContext) },
             )
         }
     }

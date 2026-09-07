@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">LazyCat</string>
+    <string name="fab_refresh">Load more cats</string>
+    <string name="cat_image">Cat photo</string>
+    <string name="placeholder">Loading cat photo</string>
+    <string name="error_image">Could not load this photo</string>
+    <string name="load_error">Couldn\'t load cat photos. Check your connection and try again.</string>
+    <string name="retry">Retry</string>
 </resources>

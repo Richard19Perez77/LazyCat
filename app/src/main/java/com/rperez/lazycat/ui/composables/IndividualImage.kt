@@ -16,13 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.rperez.lazycat.R
 
 @Composable
 fun IndividualImage(url: String) {
-
     var isLoading by remember { mutableStateOf(true) }
 
     Box(
@@ -33,28 +33,25 @@ fun IndividualImage(url: String) {
     ) {
         SubcomposeAsyncImage(
             model = url,
-            contentDescription = "anime image",
+            contentDescription = stringResource(R.string.cat_image),
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2f / 3f),
             loading = {
                 Image(
                     painter = painterResource(id = R.drawable.placeholder),
-                    contentDescription = "placeholder"
+                    contentDescription = stringResource(R.string.placeholder),
                 )
             },
             error = {
                 Image(
                     painter = painterResource(id = R.drawable.error),
-                    contentDescription = "error"
+                    contentDescription = stringResource(R.string.error_image),
                 )
             },
-            onLoading = {
-                isLoading = true
-            },
-            onSuccess = {
-                isLoading = false
-            }
+            onLoading = { isLoading = true },
+            onSuccess = { isLoading = false },
+            onError = { isLoading = false },
         )
 
         if (isLoading) {
