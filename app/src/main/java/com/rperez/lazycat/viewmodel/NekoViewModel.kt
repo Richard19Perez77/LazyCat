@@ -34,15 +34,16 @@ class NekoViewModel : ViewModel() {
                 val results = RetrofitInstance.api.getRandomImages().results
                 _uiState.value = NekoUiState(
                     results = results,
-                    isLoading = false,
+                    isLoading = true,
                     hasError = false,
                 )
                 val appContext = context.applicationContext
                 results.forEach { SaveImage.saveImageToGallery(appContext, it.url) }
             } catch (_: Exception) {
-                _uiState.update { it.copy(isLoading = false, hasError = true) }
+                _uiState.update { it.copy(hasError = true) }
             } finally {
                 calling = false
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

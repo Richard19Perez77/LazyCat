@@ -50,7 +50,10 @@ fun ScrollingGrid(
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
-                Button(onClick = onRetry) {
+                Button(
+                    onClick = onRetry,
+                    enabled = !uiState.isLoading,
+                ) {
                     Text(stringResource(R.string.retry))
                 }
             }
