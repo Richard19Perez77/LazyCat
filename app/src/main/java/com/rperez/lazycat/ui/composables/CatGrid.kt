@@ -24,8 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rperez.lazycat.R
 import com.rperez.lazycat.viewmodel.NekoViewModel
 
-private val FabTeal = Color(0xFF137A7F)
-private val FabInactive = Color(0xFF9E9E9E)
+private val FabActive = Color(0xFFE12885)
+private val FabDisabled = Color(0xFF137A7F)
 private val GrayscaleFilter = ColorFilter.colorMatrix(
     ColorMatrix().apply { setToSaturation(0f) }
 )
@@ -47,7 +47,7 @@ fun CatGrid(nekoViewModel: NekoViewModel = viewModel()) {
                         nekoViewModel.refreshUrlList(context.applicationContext)
                     }
                 },
-                containerColor = if (uiState.isLoading) FabInactive else FabTeal,
+                containerColor = if (uiState.isLoading) FabDisabled else FabActive,
             ) {
                 Image(
                     modifier = Modifier.size(48.dp),
